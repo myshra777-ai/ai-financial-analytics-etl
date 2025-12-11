@@ -17,7 +17,34 @@ print("Row count:", len(df))
 # ---------------------------------
 # Step 2: Transform
 # ---------------------------------
+# Rename columns to snake_case
+df = df.rename(columns={
+    "Index": "id",
+    "Customer Id": "customer_id",
+    "First Name": "first_name",
+    "Last Name": "last_name",
+    "Company": "company",
+    "City": "city",
+    "Country": "country",
+    "Phone 1": "phone_primary",
+    "Phone 2": "phone_secondary",
+    "Email": "email",
+    "Subscription Date": "subscription_date",
+    "Website": "website",
+})
+
+# Parse subscription_date as proper datetime
+df["subscription_date"] = pd.to_datetime(df["subscription_date"], errors="coerce")
+
+# Add audit column
 df["loaded_at"] = datetime.now()
+
+# Basic data quality checks
+print("Nulls per column:")
+print(df.isnull().sum())
+
+print("Distinct customers:", df["customer_id"].nunique())
+
 
 # ---------------------------------
 # Step 3: Load to Postgres
